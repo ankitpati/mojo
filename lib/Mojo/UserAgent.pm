@@ -196,7 +196,7 @@ sub _connection {
 sub _dequeue {
   my ($self, $loop, $name, $test) = @_;
 
-  my $old = $self->{queue}{$loop} ||= [];
+  my $old = $self->{queue}{$loop // ''} ||= [];
   my ($found, @new);
   for my $queued (@$old) {
     push @new, $queued and next if $found || !grep { $_ eq $name } @$queued;
@@ -285,7 +285,7 @@ sub _remove {
   my ($self, $id) = @_;
   my $c = delete $self->{connections}{$id};
   $self->_dequeue($c->{ioloop}, $id);
-  $c->{ioloop}->remove($id);
+  $c->{ioloop}->remove($id) if defined $c->{ioloop};
 }
 
 sub _reuse {
