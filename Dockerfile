@@ -8,18 +8,20 @@ RUN echo 'deltarpm=true' >> /etc/dnf/dnf.conf
 RUN dnf update -y
 
 RUN dnf install -y perl
-RUN dnf install -y perl'(Cpanel::JSON::XS)'
-RUN dnf install -y perl'(EV)'
-RUN dnf install -y perl'(IO::Socket::Socks)'
-RUN dnf install -y perl'(IO::Socket::SSL)'
-RUN dnf install -y perl'(Role::Tiny)'
-RUN dnf install -y perl'(Test::Pod)'
-RUN dnf install -y perl'(Test::Pod::Coverage)'
-
 RUN dnf install -y perl'(App::cpanminus)'
 
 ENV PERL_CPANM_OPT="--mirror https://cpan.metacpan.org/"
+RUN cpanm App::cpanminus
+RUN cpanm App::cpanoutdated
+RUN cpan-outdated -p | xargs cpanm
+RUN cpanm Cpanel::JSON::XS
+RUN cpanm EV
+RUN cpanm IO::Socket::Socks
+RUN cpanm IO::Socket::SSL
 RUN cpanm Net::DNS::Native
+RUN cpanm Role::Tiny
+RUN cpanm Test::Pod
+RUN cpanm Test::Pod::Coverage
 RUN cpanm IO::Compress::Brotli
 
 RUN dnf install -y man-db
