@@ -60,7 +60,10 @@ RUN echo 'source ~/.bashrc' >> ~/.bash_profile
 
 USER root:root
 
-COPY nutshell /usr/bin/
+ADD https://gitlab.com/ankitpati/scripts/raw/master/src/nutshell.sh \
+    /usr/bin/nutshell
+
+RUN chmod +x /usr/bin/nutshell
 
 ENTRYPOINT ["nutshell", "mojo:mojo", "/opt/mojo", "--"]
 CMD ["-l"]
