@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+me="$(basename "$0")"
+
+test "$#" -lt 3 && \
+    echo "Usage: $me <username[:groupname]> <path>... -- [bash arguments]" \
+    && exit 1
+
+user_group="$1"
+shift # remove username:groupname
+
+while test -n "$1" -a '--' != "$1"
+do
+    chown "$user_group" -hR "$1" || exit 2 # die immediately upon failure
+    shift # remove paths we have dealt with
+done
+shift # remove '--'
+
+username="${user_group/%:*/}" # no sed because it may not be installed
+exec su - "$username" -- "$@"
