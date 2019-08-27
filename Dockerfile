@@ -44,6 +44,9 @@ RUN echo "$MOJOUSER ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/$MOJOUSER"
 
 USER $MOJOUSER:$MOJOUSER
 
+RUN echo 'cd /opt/mojo' >> ~/.bashrc
+RUN echo 'source ~/.bashrc' >> ~/.bash_profile
+
 WORKDIR /opt/mojo
 RUN sudo chown "$MOJOUSER:$MOJOUSER" -hR ./
 
@@ -59,5 +62,9 @@ ENV TEST_IPV6="1"
 ENV TEST_HYPNOTOAD="1"
 ENV TEST_POD="1"
 
-ENTRYPOINT ["bash"]
+USER root:root
+
+COPY nutshell /usr/bin/
+
+ENTRYPOINT ["nutshell", "mojo:mojo", "/opt/mojo", "--"]
 CMD ["-l"]
