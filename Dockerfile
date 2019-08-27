@@ -28,6 +28,7 @@ RUN dnf install -y man-db
 RUN dnf install -y bash-completion
 RUN dnf install -y vim-enhanced
 RUN dnf install -y git
+RUN dnf install -y procps-ng
 
 RUN git clone https://github.com/rtomayko/git-sh.git
 WORKDIR git-sh
