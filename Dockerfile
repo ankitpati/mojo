@@ -45,22 +45,22 @@ RUN echo "$MOJOUSER ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/$MOJOUSER"
 USER $MOJOUSER:$MOJOUSER
 
 RUN echo 'cd /opt/mojo' >> ~/.bashrc
+RUN echo 'export PERL_CPANM_OPT="--mirror https://cpan.metacpan.org/"' >> ~/.bashrc
+RUN echo 'export TEST_TLS=1' >> ~/.bashrc
+RUN echo 'export TEST_UNIX=1' >> ~/.bashrc
+RUN echo 'export TEST_ONLINE=1' >> ~/.bashrc
+RUN echo 'export TEST_SOCKS=1' >> ~/.bashrc
+RUN echo 'export TEST_SUBPROCESS=1' >> ~/.bashrc
+RUN echo 'export TEST_EV=1' >> ~/.bashrc
+RUN echo 'export TEST_PREFORK=1' >> ~/.bashrc
+RUN echo 'export TEST_MORBO=1' >> ~/.bashrc
+RUN echo 'export TEST_IPV6=1' >> ~/.bashrc
+RUN echo 'export TEST_HYPNOTOAD=1' >> ~/.bashrc
+RUN echo 'export TEST_POD=1' >> ~/.bashrc
 RUN echo 'source ~/.bashrc' >> ~/.bash_profile
 
 WORKDIR /opt/mojo
 RUN sudo chown "$MOJOUSER:$MOJOUSER" -hR ./
-
-ENV TEST_TLS="1"
-ENV TEST_UNIX="1"
-ENV TEST_ONLINE="1"
-ENV TEST_SOCKS="1"
-ENV TEST_SUBPROCESS="1"
-ENV TEST_EV="1"
-ENV TEST_PREFORK="1"
-ENV TEST_MORBO="1"
-ENV TEST_IPV6="1"
-ENV TEST_HYPNOTOAD="1"
-ENV TEST_POD="1"
 
 USER root:root
 
