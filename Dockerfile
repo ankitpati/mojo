@@ -31,9 +31,8 @@ RUN dnf install -y git
 RUN dnf install -y procps-ng
 
 RUN git clone https://github.com/rtomayko/git-sh.git
-WORKDIR git-sh
-RUN make
-RUN make install
+RUN make -C git-sh/
+RUN make -C git-sh/ install
 RUN rm -rf git-sh/
 
 ENV MOJOUSER="mojo"
@@ -58,9 +57,6 @@ RUN echo 'export TEST_IPV6=1' >> ~/.bashrc
 RUN echo 'export TEST_HYPNOTOAD=1' >> ~/.bashrc
 RUN echo 'export TEST_POD=1' >> ~/.bashrc
 RUN echo 'source ~/.bashrc' >> ~/.bash_profile
-
-WORKDIR /opt/mojo
-RUN sudo chown "$MOJOUSER:$MOJOUSER" -hR ./
 
 USER root:root
 
