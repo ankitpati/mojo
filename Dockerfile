@@ -14,21 +14,24 @@ ENV PERL_CPANM_OPT="--mirror https://cpan.metacpan.org/"
 RUN cpanm App::cpanminus
 RUN cpanm App::cpanoutdated
 RUN cpan-outdated -p | xargs cpanm
+
+# keep the following section sorted & uniq’d
 RUN cpanm Cpanel::JSON::XS
 RUN cpanm EV
-RUN cpanm IO::Socket::Socks
+RUN cpanm IO::Compress::Brotli
 RUN cpanm IO::Socket::SSL
+RUN cpanm IO::Socket::Socks
 RUN cpanm Net::DNS::Native
 RUN cpanm Role::Tiny
 RUN cpanm Test::Pod
 RUN cpanm Test::Pod::Coverage
-RUN cpanm IO::Compress::Brotli
 
-RUN dnf install -y man-db
+# keep the following section sorted & uniq’d
 RUN dnf install -y bash-completion
-RUN dnf install -y vim-enhanced
 RUN dnf install -y git
+RUN dnf install -y man-db
 RUN dnf install -y procps-ng
+RUN dnf install -y vim-enhanced
 
 RUN git clone https://github.com/rtomayko/git-sh.git
 RUN make -C git-sh/
