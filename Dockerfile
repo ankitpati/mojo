@@ -33,6 +33,14 @@ RUN dnf install -y man-db
 RUN dnf install -y procps-ng
 RUN dnf install -y vim-enhanced
 
+RUN dnf install -y dnf-plugins-core
+
+# keep the following section sorted & uniq’d
+RUN dnf copr enable -y getpagespeed/wrk
+
+# keep the following section sorted & uniq’d
+RUN dnf install -y wrk
+
 RUN git clone https://github.com/rtomayko/git-sh.git
 RUN make -C git-sh/
 RUN make -C git-sh/ install
