@@ -6,6 +6,7 @@ use Mojo::IOLoop;
 use Mojo::IOLoop::Stream::HTTPServer;
 use Mojo::IOLoop::Stream::WebSocketServer;
 use Mojo::URL;
+use Mojo::Util 'term_escape';
 use Scalar::Util 'weaken';
 
 use constant DEBUG => $ENV{MOJO_SERVER_DEBUG} || 0;

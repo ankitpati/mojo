@@ -52,7 +52,6 @@ sub client {
   my $client = $self->{out}{$id}{client}
     = Mojo::IOLoop::Client->new(reactor => $self->reactor);
 
-  weaken $client->reactor($self->reactor)->{reactor};
   my $class = delete $args->{stream_class} || 'Mojo::IOLoop::Stream';
 
   weaken $self;

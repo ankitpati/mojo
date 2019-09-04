@@ -7,7 +7,7 @@ use Mojo::IOLoop;
 use Mojo::IOLoop::Stream::HTTPClient;
 use Mojo::IOLoop::Stream::WebSocketClient;
 use Mojo::Promise;
-use Mojo::Util 'monkey_patch';
+use Mojo::Util qw(monkey_patch term_escape);
 use Mojo::UserAgent::CookieJar;
 use Mojo::UserAgent::Proxy;
 use Mojo::UserAgent::Server;
@@ -258,7 +258,7 @@ sub _finish {
   $res->error({message => $res->message, code => $res->code}) if $res->is_error;
   $c->{cb}($self, $old) unless $self->_redirect($c, $old);
 
-  return unless my $c = $self->{connections}{$id};
+  return unless $c = $self->{connections}{$id};
   return $self->_reuse($id, $close) unless my $tx = $c->{tx};
 
   $self->cookie_jar->collect($tx);
