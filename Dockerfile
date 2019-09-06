@@ -1,5 +1,6 @@
 FROM fedora:latest
 LABEL maintainer="Ankit Pati <contact@ankitpati.in>"
+# Keep all sections sorted and uniq’d.
 
 RUN sed -z 's/\ntsflags=nodocs\n/\n/' -i /etc/dnf/dnf.conf
 RUN echo 'fastestmirror=true' >> /etc/dnf/dnf.conf
@@ -15,7 +16,7 @@ RUN cpanm App::cpanminus
 RUN cpanm App::cpanoutdated
 RUN cpan-outdated -p | xargs cpanm
 
-# keep the following section sorted & uniq’d
+# Section: Mojolicious development dependencies.
 RUN cpanm Cpanel::JSON::XS
 RUN cpanm EV
 RUN cpanm IO::Compress::Brotli
@@ -26,7 +27,7 @@ RUN cpanm Role::Tiny
 RUN cpanm Test::Pod
 RUN cpanm Test::Pod::Coverage
 
-# keep the following section sorted & uniq’d
+# Section: Daily-use tools.
 RUN dnf install -y bash-completion
 RUN dnf install -y git
 RUN dnf install -y man-db
@@ -36,11 +37,14 @@ RUN dnf install -y vim-enhanced
 
 RUN dnf install -y dnf-plugins-core
 
-# keep the following section sorted & uniq’d
+# Section: COPR repos.
 RUN dnf copr enable -y getpagespeed/wrk
 
-# keep the following section sorted & uniq’d
+# Section: Tools from COPR repos.
 RUN dnf install -y wrk
+
+# Section: CPAN modules for enhanced debugging.
+RUN cpanm Data::Printer
 
 RUN git clone https://github.com/rtomayko/git-sh.git
 RUN make -C git-sh/
@@ -53,12 +57,17 @@ RUN groupadd "$MOJOUSER"
 RUN useradd -g "$MOJOUSER" "$MOJOUSER"
 RUN echo "$MOJOUSER ALL=(ALL) NOPASSWD: ALL" > "/etc/sudoers.d/$MOJOUSER"
 
+ADD https://gitlab.com/ankitpati/dotfiles/raw/master/src/.dataprinter \
+    /etc/dataprinterrc
+RUN chmod 644 /etc/dataprinterrc
+ENV DATAPRINTERRC="/etc/dataprinterrc"
+
 USER $MOJOUSER:$MOJOUSER
 
 RUN echo 'cd /opt/mojo' >> ~/.bashrc
 RUN echo 'source ~/.bashrc' >> ~/.bash_profile
 
-# keep the following section sorted & uniq’d
+# Section: Mojolicious development environment variables.
 ENV TEST_EV="1"
 ENV TEST_HYPNOTOAD="1"
 ENV TEST_IPV6="1"
@@ -78,5 +87,6 @@ ADD https://gitlab.com/ankitpati/scripts/raw/master/src/nutshell.sh \
 
 RUN chmod +x /usr/bin/nutshell
 
-ENTRYPOINT ["nutshell", "mojo:mojo", "/opt/mojo", "--"]
+# Remove "/etc/dataprinterrc" once DDP 0.99+ is released to CPAN.
+ENTRYPOINT ["nutshell", "mojo:mojo", "/opt/mojo", "/etc/dataprinterrc", "--"]
 CMD ["-l"]
