@@ -230,35 +230,7 @@ sub _error {
 sub _finish {
   my ($self, $id, $close) = @_;
 
-  # Remove request timeout and finish transaction
-  return undef unless my $c = $self->{connections}{$id};
-  $c->{ioloop}->remove(delete $c->{timeout}) if $c->{timeout};
-  return $self->_reuse($id, $close) unless my $old = $c->{tx};
-
-  # Premature connection close
-  my $res = $old->closed->res->finish;
-  if ($close && !$res->code && !$res->error) {
-    $res->error({message => 'Premature connection close'});
-  }
-
-  # Always remove connection for WebSockets
-  return $self->_remove($id) if $old->is_websocket;
-  $self->cookie_jar->collect($old);
-
-  # Upgrade connection to WebSocket
-  if (my $new = $self->transactor->upgrade($old)) {
-    weaken $self;
-    $new->on(resume => sub { $self->_write($id) });
-    $c->{cb}($self, $c->{tx} = $new);
-    return $new->client_read($old->res->content->leftovers);
-  }
-
-  # CONNECT requests always have a follow-up request
-  $self->_reuse($id, $close) unless uc $old->req->method eq 'CONNECT';
-  $res->error({message => $res->message, code => $res->code}) if $res->is_error;
-  $c->{cb}($self, $old) unless $self->_redirect($c, $old);
-
-  return unless $c = $self->{connections}{$id};
+  return unless my $c = $self->{connections}{$id};
   return $self->_reuse($id, $close) unless my $tx = $c->{tx};
 
   $self->cookie_jar->collect($tx);
