@@ -68,6 +68,12 @@ RUN echo 'cd /opt/mojo' >> ~/.bashrc
 RUN echo 'source ~/.bashrc' >> ~/.bash_profile
 
 # Section: Mojolicious development environment variables.
+ENV MOJO_CLIENT_DEBUG="1"
+ENV MOJO_EVENTEMITTER_DEBUG="1"
+ENV MOJO_IOLOOP_DEBUG="1"
+ENV MOJO_SERVER_DEBUG="1"
+ENV MOJO_TEMPLATE_DEBUG="1"
+ENV MOJO_WEBSOCKET_DEBUG="1"
 ENV TEST_EV="1"
 ENV TEST_HYPNOTOAD="1"
 ENV TEST_IPV6="1"
