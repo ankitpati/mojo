@@ -99,4 +99,4 @@ RUN chmod +x /usr/bin/nutshell
 
 # Remove "/etc/dataprinterrc" once DDP 0.99+ is released to CPAN.
 ENTRYPOINT ["nutshell", "mojo:mojo", "/opt/mojo", "/etc/dataprinterrc", "--"]
-CMD ["-l"]
+CMD ["bash", "-l"]
