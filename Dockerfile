@@ -17,13 +17,13 @@ RUN cpanm App::cpanoutdated
 RUN cpan-outdated -p | xargs cpanm
 
 RUN apt install -y libssl-dev
-RUN apt install -y perl-openssl-defaults
+RUN apt install -y libz-dev
 
 # Section: Mojolicious development dependencies.
 RUN cpanm Cpanel::JSON::XS
 RUN cpanm EV
 RUN cpanm IO::Compress::Brotli
-RUN cpanm IO::Socket::SSL || true
+RUN cpanm IO::Socket::SSL
 RUN cpanm IO::Socket::Socks
 RUN cpanm Net::DNS::Native
 RUN cpanm Role::Tiny
@@ -51,6 +51,10 @@ RUN git clone https://github.com/vlad2/git-sh.git
 RUN make -C git-sh/
 RUN make -C git-sh/ install
 RUN rm -rf git-sh/
+
+RUN apt clean
+RUN apt autoremove -y
+RUN rm -rf ~/.cpanm/
 
 ENV MOJOUSER="mojo"
 
