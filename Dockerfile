@@ -64,9 +64,6 @@ ENV DATAPRINTERRC="/etc/dataprinterrc"
 
 USER $MOJOUSER:$MOJOUSER
 
-RUN echo 'cd /opt/mojo' >> ~/.bashrc
-RUN echo 'source ~/.bashrc' >> ~/.bash_profile
-
 # Section: Mojolicious development environment variables.
 ENV TEST_EV="1"
 ENV TEST_HYPNOTOAD="1"
@@ -97,6 +94,7 @@ ADD https://gitlab.com/ankitpati/scripts/raw/master/src/nutshell.sh \
 
 RUN chmod +x /usr/bin/nutshell
 
+WORKDIR /opt/mojo
 # Remove "/etc/dataprinterrc" once DDP 0.99+ is released to CPAN.
 ENTRYPOINT ["nutshell", "mojo:mojo", "/opt/mojo", "/etc/dataprinterrc", "--"]
 CMD ["bash", "-l"]
