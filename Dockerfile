@@ -1,15 +1,12 @@
-FROM fedora:latest
+FROM ubuntu:latest
 LABEL maintainer="Ankit Pati <contact@ankitpati.in>"
 # Keep all sections sorted and uniq’d.
 
-RUN sed -z 's/\ntsflags=nodocs\n/\n/' -i /etc/dnf/dnf.conf
-RUN echo 'fastestmirror=true' >> /etc/dnf/dnf.conf
-RUN echo 'deltarpm=true' >> /etc/dnf/dnf.conf
+RUN apt update -y
+RUN apt dist-upgrade -y
 
-RUN dnf update -y
-
-RUN dnf install -y perl
-RUN dnf install -y perl'(App::cpanminus)'
+RUN apt install -y perl
+RUN apt install -y cpanminus
 
 ENV PERL_CPANM_OPT="--mirror https://cpan.metacpan.org/"
 RUN cpanm App::cpanminus
@@ -28,25 +25,17 @@ RUN cpanm Test::Pod
 RUN cpanm Test::Pod::Coverage
 
 # Section: Daily-use tools.
-RUN dnf install -y bash-completion
-RUN dnf install -y git
-RUN dnf install -y man-db
-RUN dnf install -y procps-ng
-RUN dnf install -y psmisc
-RUN dnf install -y vim-enhanced
-
-RUN dnf install -y dnf-plugins-core
-
-# Section: COPR repos.
-RUN dnf copr enable -y getpagespeed/wrk
-
-# Section: Tools from COPR repos.
-RUN dnf install -y wrk
+RUN apt install -y bash-completion
+RUN apt install -y git
+RUN apt install -y man-db
+#RUN apt install -y procps-ng
+RUN apt install -y psmisc
+RUN apt install -y vim-gtk3
 
 # Section: CPAN modules for enhanced debugging.
 RUN cpanm Data::Printer
 
-RUN git clone https://github.com/rtomayko/git-sh.git
+RUN git clone https://github.com/vlad2/git-sh.git
 RUN make -C git-sh/
 RUN make -C git-sh/ install
 RUN rm -rf git-sh/
