@@ -7,17 +7,23 @@ RUN apt dist-upgrade -y
 
 RUN apt install -y perl
 RUN apt install -y cpanminus
+RUN apt install -y build-essential
+RUN apt install -y curl
+RUN apt install -y libdb-dev
 
 ENV PERL_CPANM_OPT="--mirror https://cpan.metacpan.org/"
 RUN cpanm App::cpanminus
 RUN cpanm App::cpanoutdated
 RUN cpan-outdated -p | xargs cpanm
 
+RUN apt install -y libssl-dev
+RUN apt install -y perl-openssl-defaults
+
 # Section: Mojolicious development dependencies.
 RUN cpanm Cpanel::JSON::XS
 RUN cpanm EV
 RUN cpanm IO::Compress::Brotli
-RUN cpanm IO::Socket::SSL
+RUN cpanm IO::Socket::SSL || true
 RUN cpanm IO::Socket::Socks
 RUN cpanm Net::DNS::Native
 RUN cpanm Role::Tiny
@@ -28,9 +34,10 @@ RUN cpanm Test::Pod::Coverage
 RUN apt install -y bash-completion
 RUN apt install -y git
 RUN apt install -y man-db
-#RUN apt install -y procps-ng
+RUN apt install -y procps
 RUN apt install -y psmisc
-RUN apt install -y vim-gtk3
+RUN apt install -y sudo
+RUN apt install -y vim
 
 # Section: CPAN modules for enhanced debugging.
 RUN cpanm Data::Printer
@@ -52,9 +59,6 @@ RUN chmod 644 /etc/dataprinterrc
 ENV DATAPRINTERRC="/etc/dataprinterrc"
 
 USER $MOJOUSER:$MOJOUSER
-
-RUN echo 'cd /opt/mojo' >> ~/.bashrc
-RUN echo 'source ~/.bashrc' >> ~/.bash_profile
 
 # Section: Mojolicious development environment variables.
 ENV TEST_EV="1"
@@ -86,6 +90,7 @@ ADD https://gitlab.com/ankitpati/scripts/raw/master/src/nutshell.sh \
 
 RUN chmod +x /usr/bin/nutshell
 
+WORKDIR /opt/mojo
 # Remove "/etc/dataprinterrc" once DDP 0.99+ is released to CPAN.
 ENTRYPOINT ["nutshell", "mojo:mojo", "/opt/mojo", "/etc/dataprinterrc", "--"]
 CMD ["bash", "-l"]
