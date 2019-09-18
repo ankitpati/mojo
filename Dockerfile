@@ -46,7 +46,7 @@ RUN dnf install -y wrk
 # Section: CPAN modules for enhanced debugging.
 RUN cpanm Data::Printer
 
-RUN git clone https://github.com/rtomayko/git-sh.git
+RUN git clone https://github.com/vlad2/git-sh.git
 RUN make -C git-sh/
 RUN make -C git-sh/ install
 RUN rm -rf git-sh/
