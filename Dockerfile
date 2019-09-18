@@ -42,6 +42,11 @@ RUN apt install -y vim
 # Section: CPAN modules for enhanced debugging.
 RUN cpanm Data::Printer
 
+RUN git clone https://github.com/wg/wrk.git
+RUN make -C wrk/
+RUN cp wrk/wrk /usr/local/bin/
+RUN rm -rf wrk/
+
 RUN git clone https://github.com/vlad2/git-sh.git
 RUN make -C git-sh/
 RUN make -C git-sh/ install
